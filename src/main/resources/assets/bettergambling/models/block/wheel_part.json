@@ -1,0 +1,7 @@
+{
+  "parent": "block/block",
+  "textures": {
+    "all": "bettergambling:block/wheel_part_block"
+  },
+  "render_type": "translucent"
+}
