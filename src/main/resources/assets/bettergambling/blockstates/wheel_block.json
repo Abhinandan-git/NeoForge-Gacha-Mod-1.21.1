@@ -1,7 +1,19 @@
 {
   "variants": {
-    "": {
+    "facing=north": {
       "model": "bettergambling:block/wheel_block"
+    },
+    "facing=south": {
+      "model": "bettergambling:block/wheel_block",
+      "y": 180
+    },
+    "facing=east": {
+      "model": "bettergambling:block/wheel_block",
+      "y": 90
+    },
+    "facing=west": {
+      "model": "bettergambling:block/wheel_block",
+      "y": 270
     }
   }
 }

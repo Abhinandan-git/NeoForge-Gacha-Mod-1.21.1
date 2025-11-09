@@ -1,5 +1,6 @@
 package net.abhinandan.bettergambling;
 
+import net.abhinandan.bettergambling.block.ModBlockEntities;
 import net.abhinandan.bettergambling.block.ModBlocks;
 import net.abhinandan.bettergambling.item.ModCreativeModeTabs;
 import net.abhinandan.bettergambling.item.ModItems;
@@ -52,6 +53,7 @@ public class BetterGambling {
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
         ModCreativeModeTabs.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (bettergambling) to respond directly to events.
