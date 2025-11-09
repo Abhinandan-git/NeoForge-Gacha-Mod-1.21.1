@@ -71,7 +71,7 @@ public class WheelBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected void onRemove(BlockState state, @NotNull Level level, @NotNull BlockPos pos, BlockState newState, boolean movedByPiston) {
+    protected void onRemove(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState newState, boolean movedByPiston) {
         if (state.getBlock() != newState.getBlock()) {
             if (level.getBlockEntity(pos) instanceof WheelBlockEntity wheelBlockEntity) {
                 wheelBlockEntity.drops();
