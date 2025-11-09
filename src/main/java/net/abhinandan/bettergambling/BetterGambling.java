@@ -1,14 +1,11 @@
 package net.abhinandan.bettergambling;
 
-import net.abhinandan.bettergambling.block.ModBlocks;
-import net.abhinandan.bettergambling.item.ModItems;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -37,7 +34,7 @@ public class BetterGambling {
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
     public BetterGambling(IEventBus modEventBus, ModContainer modContainer) {
-        // Register the commonSetup method for modloading
+        // Register the commonSetup method for modLoading
         modEventBus.addListener(this::commonSetup);
 
         // Register the Deferred Register to the mod event bus so blocks get registered
@@ -46,9 +43,6 @@ public class BetterGambling {
         ITEMS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
-
-        ModItems.register(modEventBus);
-        ModBlocks.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (bettergambling) to respond directly to events.
@@ -65,15 +59,7 @@ public class BetterGambling {
     private void commonSetup(FMLCommonSetupEvent event) { }
 
     // Add the example block item to the building blocks tab
-    private void addCreative(BuildCreativeModeTabContentsEvent event) {
-        if (event.getTabKey() == CreativeModeTabs.TOOLS_AND_UTILITIES) {
-            event.accept(ModItems.CELESTIA_COIN);
-        }
-
-        if (event.getTabKey() == CreativeModeTabs.OP_BLOCKS) {
-            event.accept(ModBlocks.WHEEL_BLOCK.get());
-        }
-    }
+    private void addCreative(BuildCreativeModeTabContentsEvent event) { }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
