@@ -2,6 +2,7 @@ package net.abhinandan.bettergambling.block;
 
 import net.abhinandan.bettergambling.BetterGambling;
 import net.abhinandan.bettergambling.block.custom.WheelBlock;
+import net.abhinandan.bettergambling.block.custom.WheelTopBlock;
 import net.abhinandan.bettergambling.item.ModItems;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -20,6 +21,12 @@ public class ModBlocks {
     public static final DeferredBlock<Block> WHEEL_BLOCK = registerBlock(
             "wheel_block",
             () -> new WheelBlock(
+                    BlockBehaviour.Properties.of().strength(1f).noOcclusion()
+            )
+    );
+    public static final DeferredBlock<Block> WHEEL_TOP_BLOCK = registerBlock(
+            "wheel_top_block",
+            () -> new WheelTopBlock(
                     BlockBehaviour.Properties.of().strength(1f).noOcclusion()
             )
     );
