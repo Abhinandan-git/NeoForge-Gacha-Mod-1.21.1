@@ -1,5 +1,9 @@
 package net.abhinandan.bettergambling;
 
+import net.abhinandan.bettergambling.block.ModBlocks;
+import net.abhinandan.bettergambling.item.ModCreativeModeTabs;
+import net.abhinandan.bettergambling.item.ModItems;
+import net.minecraft.world.item.CreativeModeTabs;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -43,6 +47,10 @@ public class BetterGambling {
         ITEMS.register(modEventBus);
         // Register the Deferred Register to the mod event bus so tabs get registered
         CREATIVE_MODE_TABS.register(modEventBus);
+
+        ModItems.register(modEventBus);
+        ModBlocks.register(modEventBus);
+        ModCreativeModeTabs.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (bettergambling) to respond directly to events.
