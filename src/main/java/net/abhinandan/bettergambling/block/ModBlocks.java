@@ -1,6 +1,7 @@
 package net.abhinandan.bettergambling.block;
 
 import net.abhinandan.bettergambling.BetterGambling;
+import net.abhinandan.bettergambling.block.custom.WheelBlock;
 import net.abhinandan.bettergambling.item.ModItems;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -9,6 +10,7 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -17,12 +19,12 @@ public class ModBlocks {
 
     public static final DeferredBlock<Block> WHEEL_BLOCK = registerBlock(
             "wheel_block",
-            () -> new Block(
+            () -> new WheelBlock(
                     BlockBehaviour.Properties.of().strength(1f).noOcclusion()
             )
     );
 
-    private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block) {
+    private static <T extends Block> @NotNull DeferredBlock<T> registerBlock(String name, Supplier<T> block) {
         DeferredBlock<T> toReturn = BLOCKS.register(name, block);
         registerBlockItem(name, toReturn);
         return toReturn;
