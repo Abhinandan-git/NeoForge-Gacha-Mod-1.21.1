@@ -4,8 +4,8 @@ import net.abhinandan.bettergambling.block.ModBlockEntities;
 import net.abhinandan.bettergambling.block.ModBlocks;
 import net.abhinandan.bettergambling.item.ModCreativeModeTabs;
 import net.abhinandan.bettergambling.item.ModItems;
-import net.abhinandan.bettergambling.util.ModTags;
-import net.minecraft.world.item.CreativeModeTabs;
+import net.abhinandan.bettergambling.screen.ModMenu;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import com.mojang.logging.LogUtils;
@@ -39,7 +39,7 @@ public class BetterGambling {
 
     // The constructor for the mod class is the first code that is run when your mod is loaded.
     // FML will recognize some parameter types like IEventBus or ModContainer and pass them in automatically.
-    public BetterGambling(IEventBus modEventBus, ModContainer modContainer) {
+    public BetterGambling(@NotNull IEventBus modEventBus, @NotNull ModContainer modContainer) {
         // Register the commonSetup method for modLoading
         modEventBus.addListener(this::commonSetup);
 
@@ -54,6 +54,7 @@ public class BetterGambling {
         ModBlocks.register(modEventBus);
         ModCreativeModeTabs.register(modEventBus);
         ModBlockEntities.register(modEventBus);
+        ModMenu.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (bettergambling) to respond directly to events.

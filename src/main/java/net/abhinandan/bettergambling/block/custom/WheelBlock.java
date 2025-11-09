@@ -3,7 +3,10 @@ package net.abhinandan.bettergambling.block.custom;
 import com.mojang.serialization.MapCodec;
 import net.abhinandan.bettergambling.block.entity.WheelBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -40,6 +43,10 @@ public class WheelBlock extends BaseEntityBlock {
     @Override
     protected @NotNull InteractionResult useWithoutItem(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos,
                                                         @NotNull Player player, @NotNull BlockHitResult hitResult) {
+        if (level.getBlockEntity(pos) instanceof WheelBlockEntity wheelBlockEntity && !level.isClientSide()) {
+            ((ServerPlayer) player).openMenu(new SimpleMenuProvider(wheelBlockEntity, Component.literal("Wheel")), pos);
+        }
+
         return InteractionResult.SUCCESS;
     }
 
