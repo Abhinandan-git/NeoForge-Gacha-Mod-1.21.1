@@ -3,6 +3,7 @@ package net.abhinandan.bettergambling;
 import net.abhinandan.bettergambling.block.ModBlocks;
 import net.abhinandan.bettergambling.item.ModCreativeModeTabs;
 import net.abhinandan.bettergambling.item.ModItems;
+import net.abhinandan.bettergambling.util.ModTags;
 import net.minecraft.world.item.CreativeModeTabs;
 import org.slf4j.Logger;
 
