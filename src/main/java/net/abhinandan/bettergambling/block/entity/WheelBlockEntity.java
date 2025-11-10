@@ -1,17 +1,22 @@
 package net.abhinandan.bettergambling.block.entity;
 
+import net.abhinandan.bettergambling.BetterGambling;
+import net.abhinandan.bettergambling.Config;
 import net.abhinandan.bettergambling.block.ModBlockEntities;
-import net.abhinandan.bettergambling.block.ModBlocks;
 import net.abhinandan.bettergambling.item.ModItems;
 import net.abhinandan.bettergambling.screen.custom.WheelMenu;
+import net.abhinandan.bettergambling.sound.ModSounds;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleContainer;
@@ -19,14 +24,19 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class WheelBlockEntity extends BlockEntity implements MenuProvider {
@@ -50,6 +60,8 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
     private int rotationAngle = new Random().nextInt() % 360;
     private int isSpinning = 0;
     private float spinSpeed = 1f;
+    private int spinCooldown = 60;
+    private static final String[] REWARD_ORDER = { "COMMON", "RARE", "EPIC", "COMMON", "OMEGA", "RARE", "UNCOMMON" };
 
     public WheelBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.WHEEL_BLOCK_ENTITY.get(), pos, blockState);
@@ -77,10 +89,6 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
                 return 2;
             }
         };
-    }
-
-    public void clearContents() {
-        inventory.setStackInSlot(0, ItemStack.EMPTY);
     }
 
     public void drops() {
@@ -138,32 +146,112 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
             if (isInputCorrect()) {
                 isSpinning = 1;
                 spinSpeed = 30f + level.random.nextFloat() * 10f;
+                consumeCoin();
             }
             rotationAngle = (rotationAngle + 1) % 360;
         } else if (isSpinning == 1) {
             rotationAngle += (int) spinSpeed;
             spinSpeed *= 0.95f;
-            if (spinSpeed < 0.1f) {
-                if (isInputCorrect()) {
-                    consumeCoin();
-                }
+
+            if (spinSpeed < 1f) {
+                giveReward();
+                spinCooldown = 60;
                 isSpinning = 2;
             }
         } else if (isSpinning == 2) {
-            isSpinning = 0;
+            if (spinCooldown > 0) {
+                spinCooldown--;
+            } else {
+                isSpinning = 0;
+            }
+        }
+
+        if (shouldPlaySound()) {
+            level.playSound(null, pos, ModSounds.WHEEL_SPIN.get(), SoundSource.BLOCKS);
         }
 
         setChanged(level, pos, state);
         level.sendBlockUpdated(pos, state, state, 3);
     }
 
+    private boolean shouldPlaySound() {
+        List<Integer> weights = new Config().WEIGHTS;
+        int totalWeight = weights.stream().mapToInt(Integer::intValue).sum();
+        float degreesPerWeight = 360f / totalWeight;
+
+        float cumulative = 0f;
+        for (int weight : weights) {
+            cumulative += weight * degreesPerWeight;
+
+            // How close is rotationAngle (mod 360) to this boundary?
+            float diff = Math.abs((rotationAngle % 360f) - cumulative);
+            if (diff < 2f || Math.abs(diff - 360f) < 2f) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private void consumeCoin() {
-        inventory.extractItem(0, 32, false);
-        assert this.level != null;
-        Containers.dropItemStack(level, worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ() + 0.5, new ItemStack(ModBlocks.WHEEL_BLOCK.asItem()));
+        inventory.extractItem(0, 1, false);
+    }
+
+    private void giveReward() {
+        List<? extends String> items = getItemList();
+        int itemSize = items.size();
+
+        if (itemSize > 0) {
+            assert level != null;
+            String itemId = items.get(level.random.nextInt(itemSize));
+
+            ResourceLocation rl = ResourceLocation.parse(itemId);
+
+            Item item = BuiltInRegistries.ITEM.get(rl);
+
+            if (item != Items.AIR) {
+                ItemStack itemToDrop = new ItemStack(item, 1);
+                Containers.dropItemStack(level, worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ() + 0.5, itemToDrop);
+
+                level.playSound(null, getBlockPos(), SoundEvents.ITEM_PICKUP, SoundSource.BLOCKS);
+            } else {
+                BetterGambling.LOGGER.warn("Invalid item ID in config: {}", itemId);
+            }
+        }
+    }
+
+    private List<? extends String> getItemList() {
+        return switch (REWARD_ORDER[getIndex()]) {
+            case "COMMON" -> Config.COMMON_ITEMS.get();
+            case "UNCOMMON" -> Config.UNCOMMON_ITEMS.get();
+            case "RARE" -> Config.RARE_ITEMS.get();
+            case "EPIC" -> Config.EPIC_ITEMS.get();
+            case "OMEGA" -> Config.OMEGA_ITEMS.get();
+            default -> List.of("minecraft:air");
+        };
+    }
+
+    private int getIndex() {
+        List<Integer> weights = new Config().WEIGHTS;
+
+        rotationAngle = ((rotationAngle % 360) + 360) % 360;
+
+        int totalWeight = weights.stream().mapToInt(Integer::intValue).sum();
+        float degreesPerWeight = 360f / totalWeight;
+
+        int accumulated = 0;
+        for (int i = 0; i < weights.size(); i++) {
+            int next = (int) (accumulated + (weights.get(i) * degreesPerWeight));
+            if (rotationAngle >= accumulated && rotationAngle < next) {
+                return i;
+            }
+            accumulated = next;
+        }
+
+        return 0;
     }
 
     private boolean isInputCorrect() {
-        return inventory.getStackInSlot(0).is(ModItems.CELESTIA_COIN) && inventory.getStackInSlot(0).getCount() >= 32;
+        return inventory.getStackInSlot(0).is(ModItems.CELESTIA_COIN);
     }
 }

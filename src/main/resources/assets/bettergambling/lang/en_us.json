@@ -3,5 +3,8 @@
 
   "block.bettergambling.wheel_block": "Block of Wheel",
 
-  "creativetab.bettergambling.gacha_items": "Gacha"
+  "creativetab.bettergambling.gacha_items": "Gacha",
+
+  "sound.bettergambling.wheel_spin": "Wheel Spinning",
+  "sound.bettergambling.item_pop": "Item dropped"
 }
