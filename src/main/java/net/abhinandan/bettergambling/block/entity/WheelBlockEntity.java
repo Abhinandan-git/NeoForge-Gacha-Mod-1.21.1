@@ -1,6 +1,7 @@
 package net.abhinandan.bettergambling.block.entity;
 
 import net.abhinandan.bettergambling.block.ModBlockEntities;
+import net.abhinandan.bettergambling.block.ModBlocks;
 import net.abhinandan.bettergambling.item.ModItems;
 import net.abhinandan.bettergambling.screen.custom.WheelMenu;
 import net.minecraft.core.BlockPos;
@@ -129,13 +130,12 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
         return saveWithoutMetadata(registries);
     }
 
-    public void tick(Level level, BlockPos pos, BlockState state) {
+    public void tick(@NotNull Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
 
         // 0 = idle, 1 = spinning, 2 = stopped
         if (isSpinning == 0) {
             if (isInputCorrect()) {
-                consumeCoin();
                 isSpinning = 1;
                 spinSpeed = 30f + level.random.nextFloat() * 10f;
             }
@@ -144,6 +144,9 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
             rotationAngle += (int) spinSpeed;
             spinSpeed *= 0.95f;
             if (spinSpeed < 0.1f) {
+                if (isInputCorrect()) {
+                    consumeCoin();
+                }
                 isSpinning = 2;
             }
         } else if (isSpinning == 2) {
@@ -157,7 +160,7 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
     private void consumeCoin() {
         inventory.extractItem(0, 32, false);
         assert this.level != null;
-        Containers.dropContents(this.level, this.worldPosition, NonNullList.of(new ItemStack(ModItems.CELESTIA_COIN.get(), 2)));
+        Containers.dropItemStack(level, worldPosition.getX() + 0.5, worldPosition.getY() + 1.0, worldPosition.getZ() + 0.5, new ItemStack(ModBlocks.WHEEL_BLOCK.asItem()));
     }
 
     private boolean isInputCorrect() {

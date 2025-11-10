@@ -50,7 +50,7 @@ public class WheelBlock extends BaseEntityBlock {
     protected @NotNull InteractionResult useWithoutItem(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos,
                                                         @NotNull Player player, @NotNull BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof WheelBlockEntity wheelBlockEntity && !level.isClientSide()) {
-            ((ServerPlayer) player).openMenu(new SimpleMenuProvider(wheelBlockEntity, Component.literal("Wheel")), pos);
+            ((ServerPlayer) player).openMenu(new SimpleMenuProvider(wheelBlockEntity, Component.literal("Spin the Wheel")), pos);
         }
 
         return InteractionResult.SUCCESS;
