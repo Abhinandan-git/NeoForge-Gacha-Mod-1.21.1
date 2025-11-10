@@ -6,29 +6,46 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-// An example config class. This is not required, but it's a good idea to have one to keep your config organized.
-// Demonstrates how to use Neo's config APIs
 public class Config {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
 
-    public static final ModConfigSpec.BooleanValue LOG_DIRT_BLOCK = BUILDER
-            .comment("Whether to log the dirt block on common setup")
-            .define("logDirtBlock", true);
+    private static final ModConfigSpec.IntValue COMMON_WEIGHT = BUILDER
+            .comment("Weight for Common tier")
+            .defineInRange("common_weight", 40, 1, 60);
+    private static final ModConfigSpec.IntValue UNCOMMON_WEIGHT = BUILDER
+            .comment("Weight for Uncommon tier")
+            .defineInRange("uncommon_weight", 30, 1, 50);
+    private static final ModConfigSpec.IntValue RARE_WEIGHT = BUILDER
+            .comment("Weight for Rare tier")
+            .defineInRange("rare_weight", 17, 1, 35);
+    private static final ModConfigSpec.IntValue EPIC_WEIGHT = BUILDER
+            .comment("Weight for epic tier")
+            .defineInRange("epic_weight", 11, 1, 20);
+    private static final ModConfigSpec.IntValue OMEGA_WEIGHT = BUILDER
+            .comment("Weight for Omega tier")
+            .defineInRange("omega_weight", 2, 1, 10);
 
-    public static final ModConfigSpec.IntValue MAGIC_NUMBER = BUILDER
-            .comment("A magic number")
-            .defineInRange("magicNumber", 42, 0, Integer.MAX_VALUE);
-
-    public static final ModConfigSpec.ConfigValue<String> MAGIC_NUMBER_INTRODUCTION = BUILDER
-            .comment("What you want the introduction message to be for the magic number")
-            .define("magicNumberIntroduction", "The magic number is... ");
-
-    // a list of strings that are treated as resource locations for items
-    public static final ModConfigSpec.ConfigValue<List<? extends String>> ITEM_STRINGS = BUILDER
-            .comment("A list of items to log on common setup.")
-            .defineListAllowEmpty("items", List.of("minecraft:iron_ingot"), () -> "", Config::validateItemName);
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> COMMON_ITEMS = BUILDER
+            .comment("Pool of all common items.")
+            .defineList("common", List.of("minecraft:stick"), () -> "", Config::validateItemName);
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> UNCOMMON_ITEMS = BUILDER
+            .comment("Pool of all uncommon items.")
+            .defineList("uncommon", List.of("minecraft:iron_ingot"), () -> "", Config::validateItemName);
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> RARE_ITEMS = BUILDER
+            .comment("Pool of all rare items.")
+            .defineList("rare", List.of("minecraft:gold_ingot"), () -> "", Config::validateItemName);
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> EPIC_ITEMS = BUILDER
+            .comment("Pool of all epic items.")
+            .defineList("epic", List.of("minecraft:gold_ingot"), () -> "", Config::validateItemName);
+    public static final ModConfigSpec.ConfigValue<List<? extends String>> OMEGA_ITEMS = BUILDER
+            .comment("Pool of all omega items.")
+            .defineList("omega", List.of("minecraft:netherite_ingot"), () -> "", Config::validateItemName);
 
     static final ModConfigSpec SPEC = BUILDER.build();
+
+    public final List<Integer> WEIGHTS = List.of(
+            COMMON_WEIGHT.get() / 2, RARE_WEIGHT.get() / 2, EPIC_WEIGHT.get(), COMMON_WEIGHT.get() / 2, OMEGA_WEIGHT.get(), RARE_WEIGHT.get() / 2, UNCOMMON_WEIGHT.get()
+    );
 
     private static boolean validateItemName(final Object obj) {
         return obj instanceof String itemName && BuiltInRegistries.ITEM.containsKey(ResourceLocation.parse(itemName));

@@ -1,0 +1,8 @@
+{
+  "wheel_spin": {
+    "subtitle": "sounds.bettergambling.wheel_spin",
+    "sounds": [
+      "bettergambling:wheel_spin"
+    ]
+  }
+}

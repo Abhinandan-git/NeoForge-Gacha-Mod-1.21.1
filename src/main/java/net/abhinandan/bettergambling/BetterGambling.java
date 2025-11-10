@@ -5,6 +5,7 @@ import net.abhinandan.bettergambling.block.ModBlocks;
 import net.abhinandan.bettergambling.item.ModCreativeModeTabs;
 import net.abhinandan.bettergambling.item.ModItems;
 import net.abhinandan.bettergambling.screen.ModMenu;
+import net.abhinandan.bettergambling.sound.ModSounds;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -55,6 +56,7 @@ public class BetterGambling {
         ModCreativeModeTabs.register(modEventBus);
         ModBlockEntities.register(modEventBus);
         ModMenu.register(modEventBus);
+        ModSounds.register(modEventBus);
 
         // Register ourselves for server and other game events we are interested in.
         // Note that this is necessary if and only if we want *this* class (bettergambling) to respond directly to events.
