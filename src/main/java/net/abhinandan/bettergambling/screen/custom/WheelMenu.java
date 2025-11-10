@@ -6,9 +6,7 @@ import net.abhinandan.bettergambling.screen.ModMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -18,20 +16,23 @@ import org.jetbrains.annotations.NotNull;
 public class WheelMenu extends AbstractContainerMenu {
     public final WheelBlockEntity wheelBlockEntity;
     private final Level level;
+    private final ContainerData data;
 
     public WheelMenu(int containerId, Inventory inventory, @NotNull FriendlyByteBuf extraData) {
-        this(containerId, inventory, inventory.player.level().getBlockEntity(extraData.readBlockPos()));
+        this(containerId, inventory, inventory.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(2));
     }
 
-    public WheelMenu(int containerId, @NotNull Inventory inventory, BlockEntity blockEntity) {
+    public WheelMenu(int containerId, @NotNull Inventory inventory, BlockEntity blockEntity, ContainerData data) {
         super(ModMenu.WHEEL_MENU.get(), containerId);
         this.wheelBlockEntity = ((WheelBlockEntity) blockEntity);
         this.level = inventory.player.level();
+        this.data = data;
 
         addPlayerHotbar(inventory);
 
         this.addSlot(new SlotItemHandler(this.wheelBlockEntity.inventory, 0, 152, 120));
-        //this.addSlot(new SlotItemHandler(this.wheelBlockEntity.inventory, 0, 135, 62));
+
+        addDataSlots(data);
     }
 
     private static final int HOTBAR_SLOT_COUNT = 9;
@@ -85,5 +86,9 @@ public class WheelMenu extends AbstractContainerMenu {
         for (int i = 0; i < 9; i++) {
             this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
         }
+    }
+
+    public int getRotationAngle() {
+        return data.get(0);
     }
 }

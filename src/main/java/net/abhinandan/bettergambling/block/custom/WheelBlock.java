@@ -1,6 +1,7 @@
 package net.abhinandan.bettergambling.block.custom;
 
 import com.mojang.serialization.MapCodec;
+import net.abhinandan.bettergambling.block.ModBlockEntities;
 import net.abhinandan.bettergambling.block.ModBlocks;
 import net.abhinandan.bettergambling.block.entity.WheelBlockEntity;
 import net.abhinandan.bettergambling.util.ModTags;
@@ -17,6 +18,8 @@ import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -107,5 +110,18 @@ public class WheelBlock extends BaseEntityBlock {
     @Override
     protected void createBlockStateDefinition(@NotNull StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
+    }
+
+    @Override
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
+        if (level.isClientSide()) {
+            return null;
+        }
+
+        return createTickerHelper(
+                blockEntityType,
+                ModBlockEntities.WHEEL_BLOCK_ENTITY.get(),
+                (lvl, blockPos, blockState, blockEntity) -> blockEntity.tick(lvl, blockPos, blockState)
+        );
     }
 }
