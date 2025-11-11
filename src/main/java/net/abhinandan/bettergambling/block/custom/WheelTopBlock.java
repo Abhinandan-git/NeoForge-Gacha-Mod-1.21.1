@@ -3,13 +3,14 @@ package net.abhinandan.bettergambling.block.custom;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class WheelTopBlock extends Block {
     public WheelTopBlock(Properties properties) {
@@ -45,5 +46,10 @@ public class WheelTopBlock extends Block {
     @Override
     protected @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
         return RenderShape.INVISIBLE;
+    }
+
+    @Override
+    public @Nullable PushReaction getPistonPushReaction(@NotNull BlockState state) {
+        return PushReaction.DESTROY;
     }
 }
