@@ -11,8 +11,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 public class WheelScreen extends AbstractContainerScreen<WheelMenu> {
     private static final ResourceLocation GUI_TEXTURE = ResourceLocation.fromNamespaceAndPath(
             BetterGambling.MOD_ID,
@@ -20,7 +18,7 @@ public class WheelScreen extends AbstractContainerScreen<WheelMenu> {
     );
     private static final ResourceLocation WHEEL_TEXTURE = ResourceLocation.fromNamespaceAndPath(
             BetterGambling.MOD_ID,
-            "textures/gui/wheel/wheel_200.png"
+            "textures/gui/wheel/wheel.png"
     );
     private static final ResourceLocation BORDER_TEXTURE = ResourceLocation.fromNamespaceAndPath(
             BetterGambling.MOD_ID,
@@ -34,8 +32,6 @@ public class WheelScreen extends AbstractContainerScreen<WheelMenu> {
             Component.literal("OMEGA")
     };
     private static final int[] colors = {
-            // BLUE,       YELLOW,     GREEN,      GREY,       PURPLE,     YELLOW,     GREY
-            // 0xFF328BEF, 0xFFDFD222, 0xFF16D318, 0xFF808080, 0xFFB736F4, 0xFFDFD222, 0xFF808080
             0xFF808080, 0xFF328BEF, 0xFFDFD222, 0xFFB736F4, 0xFF16D318
     };
 
