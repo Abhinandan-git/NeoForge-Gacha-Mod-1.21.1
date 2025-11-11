@@ -35,7 +35,7 @@ public class WheelScreen extends AbstractContainerScreen<WheelMenu> {
             0xFF808080, 0xFF328BEF, 0xFFDFD222, 0xFFB736F4, 0xFF16D318
     };
 
-    public WheelScreen(WheelMenu menu, Inventory playerInventory, Component title) {
+    public WheelScreen(@NotNull WheelMenu menu, @NotNull Inventory playerInventory, @NotNull Component title) {
         super(menu, playerInventory, title);
     }
 
@@ -56,10 +56,10 @@ public class WheelScreen extends AbstractContainerScreen<WheelMenu> {
 
         guiGraphics.blit(BORDER_TEXTURE, x + 24, y + 22, 0, 0, 117, 104, 117, 104);
 
-        renderText(guiGraphics, x, y);
+        renderText(guiGraphics);
     }
 
-    private void renderText(GuiGraphics guiGraphics, int x, int y) {
+    private void renderText(@NotNull GuiGraphics guiGraphics) {
         int index = menu.getDisplayText();
         if (index != -1) {
             guiGraphics.pose().pushPose();

@@ -5,6 +5,7 @@ import net.minecraft.world.item.Item;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.jetbrains.annotations.NotNull;
 
 public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(BetterGambling.MOD_ID);
@@ -14,7 +15,7 @@ public class ModItems {
             () -> new Item(new Item.Properties())
     );
 
-    public static void register(IEventBus eventBus) {
+    public static void register(@NotNull IEventBus eventBus) {
         ITEMS.register(eventBus);
     }
 }

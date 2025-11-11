@@ -31,17 +31,17 @@ public class ModBlocks {
             )
     );
 
-    private static <T extends Block> @NotNull DeferredBlock<T> registerBlock(String name, Supplier<T> block) {
+    private static <T extends Block> @NotNull DeferredBlock<T> registerBlock(@NotNull String name, @NotNull Supplier<T> block) {
         DeferredBlock<T> toReturn = BLOCKS.register(name, block);
         registerBlockItem(name, toReturn);
         return toReturn;
     }
 
-    private static <T extends Block> void registerBlockItem(String name, DeferredBlock<T> block) {
+    private static <T extends Block> void registerBlockItem(@NotNull String name, @NotNull DeferredBlock<T> block) {
         ModItems.ITEMS.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
     }
 
-    public static void register(IEventBus eventBus) {
+    public static void register(@NotNull IEventBus eventBus) {
         BLOCKS.register(eventBus);
     }
 }

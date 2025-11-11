@@ -28,14 +28,12 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -56,7 +54,7 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
         }
     };
 
-    private final ContainerData data;
+    private final @NotNull ContainerData data;
     private int rotationAngle = new Random().nextInt() % 360;
     private int isSpinning = 0;
     private float spinSpeed = 1f;
@@ -64,7 +62,7 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
     private int displayText = -1;
     private static final String[] REWARD_ORDER = { "COMMON", "UNCOMMON", "RARE", "EPIC", "OMEGA" };
 
-    public WheelBlockEntity(BlockPos pos, BlockState blockState) {
+    public WheelBlockEntity(@NotNull BlockPos pos, @NotNull BlockState blockState) {
         super(ModBlockEntities.WHEEL_BLOCK_ENTITY.get(), pos, blockState);
 
         data = new ContainerData() {
@@ -137,7 +135,7 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
         return saveWithoutMetadata(registries);
     }
 
-    public void tick(@NotNull Level level, BlockPos pos, BlockState state) {
+    public void tick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state) {
         if (level.isClientSide) return;
 
         // 0 = idle, 1 = spinning, 2 = stopped
@@ -220,7 +218,7 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
         }
     }
 
-    private List<? extends String> getItemList() {
+    private @NotNull List<? extends String> getItemList() {
         int index = getIndex();
 
         displayText = index;

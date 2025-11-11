@@ -6,6 +6,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -21,7 +22,7 @@ public class ModBlockEntities {
             ).build(null)
     );
 
-    public static void register(IEventBus eventBus) {
+    public static void register(@NotNull IEventBus eventBus) {
         BLOCK_ENTITY_TYPE.register(eventBus);
     }
 }

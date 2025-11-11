@@ -15,14 +15,14 @@ import org.jetbrains.annotations.NotNull;
 
 public class WheelMenu extends AbstractContainerMenu {
     public final WheelBlockEntity wheelBlockEntity;
-    private final Level level;
+    private final @NotNull Level level;
     private final ContainerData data;
 
-    public WheelMenu(int containerId, Inventory inventory, @NotNull FriendlyByteBuf extraData) {
+    public WheelMenu(int containerId, @NotNull Inventory inventory, @NotNull FriendlyByteBuf extraData) {
         this(containerId, inventory, inventory.player.level().getBlockEntity(extraData.readBlockPos()), new SimpleContainerData(2));
     }
 
-    public WheelMenu(int containerId, @NotNull Inventory inventory, BlockEntity blockEntity, ContainerData data) {
+    public WheelMenu(int containerId, @NotNull Inventory inventory, BlockEntity blockEntity, @NotNull ContainerData data) {
         super(ModMenu.WHEEL_MENU.get(), containerId);
         this.wheelBlockEntity = ((WheelBlockEntity) blockEntity);
         this.level = inventory.player.level();
@@ -82,7 +82,7 @@ public class WheelMenu extends AbstractContainerMenu {
         return stillValid(ContainerLevelAccess.create(level, wheelBlockEntity.getBlockPos()), player, ModBlocks.WHEEL_BLOCK.get());
     }
 
-    private void addPlayerHotbar(Inventory playerInventory) {
+    private void addPlayerHotbar(@NotNull Inventory playerInventory) {
         for (int i = 0; i < 9; i++) {
             this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
         }

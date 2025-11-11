@@ -13,14 +13,14 @@ import java.util.function.Supplier;
 public class ModSounds {
     public static final DeferredRegister<SoundEvent> SOUND_EVENT = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, BetterGambling.MOD_ID);
 
-    public static final Supplier<SoundEvent> WHEEL_SPIN = registerSoundEvent("wheel_spin");
+    public static final Supplier<SoundEvent> WHEEL_SPIN = registerSoundEvent();
 
-    private static @NotNull Supplier<SoundEvent> registerSoundEvent(String name) {
-        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(BetterGambling.MOD_ID, name);
-        return SOUND_EVENT.register(name, () -> SoundEvent.createVariableRangeEvent(id));
+    private static @NotNull Supplier<SoundEvent> registerSoundEvent() {
+        ResourceLocation id = ResourceLocation.fromNamespaceAndPath(BetterGambling.MOD_ID, "wheel_spin");
+        return SOUND_EVENT.register("wheel_spin", () -> SoundEvent.createVariableRangeEvent(id));
     }
 
-    public static void register(IEventBus eventBus) {
+    public static void register(@NotNull IEventBus eventBus) {
         SOUND_EVENT.register(eventBus);
     }
 }

@@ -4,10 +4,8 @@ import com.mojang.serialization.MapCodec;
 import net.abhinandan.bettergambling.block.ModBlockEntities;
 import net.abhinandan.bettergambling.block.ModBlocks;
 import net.abhinandan.bettergambling.block.entity.WheelBlockEntity;
-import net.abhinandan.bettergambling.util.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
@@ -32,7 +30,7 @@ public class WheelBlock extends BaseEntityBlock {
     public static final MapCodec<WheelBlock> CODEC = simpleCodec(WheelBlock::new);
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
-    public WheelBlock(Properties properties) {
+    public WheelBlock(@NotNull Properties properties) {
         super(properties);
     }
 
@@ -50,7 +48,7 @@ public class WheelBlock extends BaseEntityBlock {
     protected @NotNull InteractionResult useWithoutItem(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos,
                                                         @NotNull Player player, @NotNull BlockHitResult hitResult) {
         if (level.getBlockEntity(pos) instanceof WheelBlockEntity wheelBlockEntity && !level.isClientSide()) {
-            ((ServerPlayer) player).openMenu(new SimpleMenuProvider(wheelBlockEntity, Component.literal("Spin the Wheel")), pos);
+            player.openMenu(new SimpleMenuProvider(wheelBlockEntity, Component.literal("Spin the Wheel")), pos);
         }
 
         return InteractionResult.SUCCESS;

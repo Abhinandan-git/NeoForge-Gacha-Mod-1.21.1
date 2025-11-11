@@ -8,6 +8,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
@@ -27,7 +28,7 @@ public class ModCreativeModeTabs {
                     .build()
     );
 
-    public static void register(IEventBus eventBus) {
+    public static void register(@NotNull IEventBus eventBus) {
         CREATIVE_MODE_TAB.register(eventBus);
     }
 }

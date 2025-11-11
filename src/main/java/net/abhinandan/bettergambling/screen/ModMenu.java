@@ -15,13 +15,13 @@ import org.jetbrains.annotations.NotNull;
 public class ModMenu {
     public static final DeferredRegister<MenuType<?>> MENU = DeferredRegister.create(Registries.MENU, BetterGambling.MOD_ID);
 
-    public static final DeferredHolder<MenuType<?>, MenuType<WheelMenu>> WHEEL_MENU = registerMenu("wheel_menu", WheelMenu::new);
+    public static final DeferredHolder<MenuType<?>, MenuType<WheelMenu>> WHEEL_MENU = registerMenu(WheelMenu::new);
 
-    private static <T extends AbstractContainerMenu> @NotNull DeferredHolder<MenuType<?>, MenuType<T>> registerMenu(String name, IContainerFactory<T> factory) {
-        return MENU.register(name, () -> IMenuTypeExtension.create(factory));
+    private static <T extends AbstractContainerMenu> @NotNull DeferredHolder<MenuType<?>, MenuType<T>> registerMenu(@NotNull IContainerFactory<T> factory) {
+        return MENU.register("wheel_menu", () -> IMenuTypeExtension.create(factory));
     }
 
-    public static void register(IEventBus eventBus) {
+    public static void register(@NotNull IEventBus eventBus) {
         MENU.register(eventBus);
     }
 }

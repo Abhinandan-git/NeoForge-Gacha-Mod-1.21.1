@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class WheelTopBlock extends Block {
-    public WheelTopBlock(Properties properties) {
+    public WheelTopBlock(@NotNull Properties properties) {
         super(properties);
     }
 
