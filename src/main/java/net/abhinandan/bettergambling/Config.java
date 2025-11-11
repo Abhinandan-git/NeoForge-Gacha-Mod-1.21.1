@@ -11,16 +11,16 @@ public class Config {
 
     private static final ModConfigSpec.IntValue COMMON_WEIGHT = BUILDER
             .comment("Weight for Common tier")
-            .defineInRange("common_weight", 40, 1, 60);
+            .defineInRange("common_weight", 40, 20, 60);
     private static final ModConfigSpec.IntValue UNCOMMON_WEIGHT = BUILDER
             .comment("Weight for Uncommon tier")
-            .defineInRange("uncommon_weight", 30, 1, 50);
+            .defineInRange("uncommon_weight", 30, 15, 50);
     private static final ModConfigSpec.IntValue RARE_WEIGHT = BUILDER
             .comment("Weight for Rare tier")
-            .defineInRange("rare_weight", 17, 1, 35);
+            .defineInRange("rare_weight", 17, 10, 35);
     private static final ModConfigSpec.IntValue EPIC_WEIGHT = BUILDER
             .comment("Weight for epic tier")
-            .defineInRange("epic_weight", 11, 1, 20);
+            .defineInRange("epic_weight", 11, 5, 20);
     private static final ModConfigSpec.IntValue OMEGA_WEIGHT = BUILDER
             .comment("Weight for Omega tier")
             .defineInRange("omega_weight", 2, 1, 10);
@@ -36,7 +36,7 @@ public class Config {
             .defineList("rare", List.of("minecraft:gold_ingot"), () -> "", Config::validateItemName);
     public static final ModConfigSpec.ConfigValue<List<? extends String>> EPIC_ITEMS = BUILDER
             .comment("Pool of all epic items.")
-            .defineList("epic", List.of("minecraft:gold_ingot"), () -> "", Config::validateItemName);
+            .defineList("epic", List.of("minecraft:diamond"), () -> "", Config::validateItemName);
     public static final ModConfigSpec.ConfigValue<List<? extends String>> OMEGA_ITEMS = BUILDER
             .comment("Pool of all omega items.")
             .defineList("omega", List.of("minecraft:netherite_ingot"), () -> "", Config::validateItemName);
@@ -44,7 +44,7 @@ public class Config {
     static final ModConfigSpec SPEC = BUILDER.build();
 
     public final List<Integer> WEIGHTS = List.of(
-            COMMON_WEIGHT.get() / 2, RARE_WEIGHT.get() / 2, EPIC_WEIGHT.get(), COMMON_WEIGHT.get() / 2, OMEGA_WEIGHT.get(), RARE_WEIGHT.get() / 2, UNCOMMON_WEIGHT.get()
+            COMMON_WEIGHT.get(), UNCOMMON_WEIGHT.get(), RARE_WEIGHT.get(), EPIC_WEIGHT.get(), OMEGA_WEIGHT.get()
     );
 
     private static boolean validateItemName(final Object obj) {

@@ -6,5 +6,17 @@
   "creativetab.bettergambling.gacha_items": "Gacha",
 
   "sound.bettergambling.wheel_spin": "Wheel Spinning",
-  "sound.bettergambling.item_pop": "Item dropped"
+  "sound.bettergambling.item_pop": "Item dropped",
+
+  "bettergambling.configuration.common_weight": "Common Weight",
+  "bettergambling.configuration.uncommon_weight": "Uncommon Weight",
+  "bettergambling.configuration.rare_weight": "Rare Weight",
+  "bettergambling.configuration.epic_weight": "Epic Weight",
+  "bettergambling.configuration.omega_weight": "Omega Weight",
+
+  "bettergambling.configuration.common": "Common Item Pool",
+  "bettergambling.configuration.uncommon": "Uncommon Item Pool",
+  "bettergambling.configuration.rare": "Rare Item Pool",
+  "bettergambling.configuration.epic": "Epic Item Pool",
+  "bettergambling.configuration.omega": "Omega Item Pool"
 }

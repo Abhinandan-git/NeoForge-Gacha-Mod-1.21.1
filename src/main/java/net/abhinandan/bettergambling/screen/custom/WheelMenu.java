@@ -91,4 +91,8 @@ public class WheelMenu extends AbstractContainerMenu {
     public int getRotationAngle() {
         return data.get(0);
     }
+
+    public int getDisplayText() {
+        return data.get(1);
+    }
 }

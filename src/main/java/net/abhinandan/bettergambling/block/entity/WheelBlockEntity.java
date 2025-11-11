@@ -61,7 +61,8 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
     private int isSpinning = 0;
     private float spinSpeed = 1f;
     private int spinCooldown = 60;
-    private static final String[] REWARD_ORDER = { "COMMON", "RARE", "EPIC", "COMMON", "OMEGA", "RARE", "UNCOMMON" };
+    private int displayText = -1;
+    private static final String[] REWARD_ORDER = { "COMMON", "UNCOMMON", "RARE", "EPIC", "OMEGA" };
 
     public WheelBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.WHEEL_BLOCK_ENTITY.get(), pos, blockState);
@@ -71,7 +72,7 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
             public int get(int i) {
                 return switch (i) {
                     case 0 -> WheelBlockEntity.this.rotationAngle;
-                    case 1 -> WheelBlockEntity.this.isSpinning;
+                    case 1 -> WheelBlockEntity.this.displayText;
                     default -> 0;
                 };
             }
@@ -80,7 +81,7 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
             public void set(int i, int value) {
                 switch (i) {
                     case 0 -> WheelBlockEntity.this.rotationAngle = value;
-                    case 1 -> WheelBlockEntity.this.isSpinning = value;
+                    case 1 -> WheelBlockEntity.this.displayText = value;
                 }
             }
 
@@ -107,7 +108,6 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
         super.saveAdditional(tag, registries);
         tag.put("inventory", inventory.serializeNBT(registries));
         tag.putInt("wheel.rotation_angle", rotationAngle);
-        tag.putInt("wheel.is_spinning", isSpinning);
     }
 
     @Override
@@ -115,7 +115,6 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
         super.loadAdditional(tag, registries);
         inventory.deserializeNBT(registries, tag.getCompound("inventory"));
         rotationAngle = tag.getInt("wheel.rotation_angle");
-        isSpinning = tag.getInt("wheel.is_spinning");
     }
 
     @Override
@@ -143,6 +142,7 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
 
         // 0 = idle, 1 = spinning, 2 = stopped
         if (isSpinning == 0) {
+            displayText = -1;
             if (isInputCorrect()) {
                 isSpinning = 1;
                 spinSpeed = 30f + level.random.nextFloat() * 10f;
@@ -150,7 +150,7 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
             }
             rotationAngle = (rotationAngle + 1) % 360;
         } else if (isSpinning == 1) {
-            rotationAngle += (int) spinSpeed;
+            rotationAngle = (int) ((rotationAngle + spinSpeed) % 360);
             spinSpeed *= 0.95f;
 
             if (spinSpeed < 1f) {
@@ -163,6 +163,7 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
                 spinCooldown--;
             } else {
                 isSpinning = 0;
+                displayText = -1;
             }
         }
 
@@ -183,7 +184,6 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
         for (int weight : weights) {
             cumulative += weight * degreesPerWeight;
 
-            // How close is rotationAngle (mod 360) to this boundary?
             float diff = Math.abs((rotationAngle % 360f) - cumulative);
             if (diff < 2f || Math.abs(diff - 360f) < 2f) {
                 return true;
@@ -205,9 +205,9 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
             assert level != null;
             String itemId = items.get(level.random.nextInt(itemSize));
 
-            ResourceLocation rl = ResourceLocation.parse(itemId);
+            ResourceLocation resourceLocation = ResourceLocation.parse(itemId);
 
-            Item item = BuiltInRegistries.ITEM.get(rl);
+            Item item = BuiltInRegistries.ITEM.get(resourceLocation);
 
             if (item != Items.AIR) {
                 ItemStack itemToDrop = new ItemStack(item, 1);
@@ -221,7 +221,11 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     private List<? extends String> getItemList() {
-        return switch (REWARD_ORDER[getIndex()]) {
+        int index = getIndex();
+
+        displayText = index;
+
+        return switch (REWARD_ORDER[index]) {
             case "COMMON" -> Config.COMMON_ITEMS.get();
             case "UNCOMMON" -> Config.UNCOMMON_ITEMS.get();
             case "RARE" -> Config.RARE_ITEMS.get();
@@ -233,8 +237,6 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
 
     private int getIndex() {
         List<Integer> weights = new Config().WEIGHTS;
-
-        rotationAngle = ((rotationAngle % 360) + 360) % 360;
 
         int totalWeight = weights.stream().mapToInt(Integer::intValue).sum();
         float degreesPerWeight = 360f / totalWeight;

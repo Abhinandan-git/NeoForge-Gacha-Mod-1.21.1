@@ -11,6 +11,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 public class WheelScreen extends AbstractContainerScreen<WheelMenu> {
     private static final ResourceLocation GUI_TEXTURE = ResourceLocation.fromNamespaceAndPath(
             BetterGambling.MOD_ID,
@@ -18,12 +20,24 @@ public class WheelScreen extends AbstractContainerScreen<WheelMenu> {
     );
     private static final ResourceLocation WHEEL_TEXTURE = ResourceLocation.fromNamespaceAndPath(
             BetterGambling.MOD_ID,
-            "textures/gui/wheel/wheel_gui.png"
+            "textures/gui/wheel/wheel_200.png"
     );
     private static final ResourceLocation BORDER_TEXTURE = ResourceLocation.fromNamespaceAndPath(
             BetterGambling.MOD_ID,
             "textures/gui/wheel/wheel_border.png"
     );
+    private static final Component[] rarity = {
+            Component.literal("COMMON"),
+            Component.literal("UNCOMMON"),
+            Component.literal("RARE"),
+            Component.literal("EPIC"),
+            Component.literal("OMEGA")
+    };
+    private static final int[] colors = {
+            // BLUE,       YELLOW,     GREEN,      GREY,       PURPLE,     YELLOW,     GREY
+            // 0xFF328BEF, 0xFFDFD222, 0xFF16D318, 0xFF808080, 0xFFB736F4, 0xFFDFD222, 0xFF808080
+            0xFF808080, 0xFF328BEF, 0xFFDFD222, 0xFFB736F4, 0xFF16D318
+    };
 
     public WheelScreen(WheelMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -44,7 +58,37 @@ public class WheelScreen extends AbstractContainerScreen<WheelMenu> {
 
         renderWheel(guiGraphics, x, y);
 
-        guiGraphics.blit(BORDER_TEXTURE, x + 24, y + 18, 0, 0, 117, 104, 117, 104);
+        guiGraphics.blit(BORDER_TEXTURE, x + 24, y + 22, 0, 0, 117, 104, 117, 104);
+
+        renderText(guiGraphics, x, y);
+    }
+
+    private void renderText(GuiGraphics guiGraphics, int x, int y) {
+        int index = menu.getDisplayText();
+        if (index != -1) {
+            guiGraphics.pose().pushPose();
+
+            int screenWidth = this.width;
+            int screenHeight = this.height;
+
+            int colorTop = 0x00000000;
+            int colorMiddle = 0xFF000000;
+            int colorBottom = 0x00000000;
+            guiGraphics.fillGradient(0, 0, screenWidth, screenHeight / 2, colorTop, colorMiddle);
+            guiGraphics.fillGradient(0, screenHeight / 2, screenWidth, screenHeight, colorMiddle, colorBottom);
+
+            guiGraphics.pose().translate(screenWidth / 2f, screenHeight / 2f, 0);
+            float scale = 4f;
+            guiGraphics.pose().scale(scale, scale, 1f);
+
+            Component text = rarity[index];
+            int textWidth = this.font.width(text);
+            int textHeight = this.font.lineHeight;
+
+            guiGraphics.drawString(this.font, text, -textWidth / 2, -textHeight / 2, colors[index], false);
+
+            guiGraphics.pose().popPose();
+        }
     }
 
     @Override
@@ -55,15 +99,19 @@ public class WheelScreen extends AbstractContainerScreen<WheelMenu> {
 
     @Override
     protected void renderLabels(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, -12566464, false);
+        guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 0xFF3F3F40, false);
     }
 
     private void renderWheel(@NotNull GuiGraphics guiGraphics, int x, int y) {
         guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(x + 52 + 24, y + 52 + 18, 0);
+
+        guiGraphics.pose().translate(x + 50 + 26, y + 50 + 24, 0);
         guiGraphics.pose().mulPose(Axis.ZP.rotationDegrees(menu.getRotationAngle()));
         guiGraphics.pose().translate(-50, -50, 0);
         guiGraphics.blit(WHEEL_TEXTURE, 0, 0, 0, 0, 100, 100, 100, 100);
+
         guiGraphics.pose().popPose();
+
+        guiGraphics.drawString(this.font, String.valueOf(menu.getRotationAngle()), 0, 0, 0xFF000000);
     }
 }
