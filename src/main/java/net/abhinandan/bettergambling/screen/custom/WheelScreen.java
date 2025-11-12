@@ -107,7 +107,5 @@ public class WheelScreen extends AbstractContainerScreen<WheelMenu> {
         guiGraphics.blit(WHEEL_TEXTURE, 0, 0, 0, 0, 100, 100, 100, 100);
 
         guiGraphics.pose().popPose();
-
-        guiGraphics.drawString(this.font, String.valueOf(menu.getRotationAngle()), 0, 0, 0xFF000000);
     }
 }

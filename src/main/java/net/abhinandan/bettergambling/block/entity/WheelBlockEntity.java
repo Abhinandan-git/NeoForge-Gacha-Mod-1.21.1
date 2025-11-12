@@ -59,6 +59,7 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
     private int isSpinning = 0;
     private float spinSpeed = 1f;
     private int spinCooldown = 60;
+    private int soundTimer = 0;
     private int displayText = -1;
     private static final String[] REWARD_ORDER = { "COMMON", "UNCOMMON", "RARE", "EPIC", "OMEGA" };
 
@@ -136,7 +137,9 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     public void tick(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state) {
-        if (level.isClientSide) return;
+        if (level.isClientSide) {
+            return;
+        }
 
         // 0 = idle, 1 = spinning, 2 = stopped
         if (isSpinning == 0) {
@@ -156,6 +159,8 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
                 spinCooldown = 60;
                 isSpinning = 2;
             }
+
+            playDynamicSpinSound(level, pos);
         } else if (isSpinning == 2) {
             if (spinCooldown > 0) {
                 spinCooldown--;
@@ -165,30 +170,27 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
             }
         }
 
-        if (shouldPlaySound()) {
-            level.playSound(null, pos, ModSounds.WHEEL_SPIN.get(), SoundSource.BLOCKS);
-        }
-
         setChanged(level, pos, state);
         level.sendBlockUpdated(pos, state, state, 3);
     }
 
-    private boolean shouldPlaySound() {
-        List<Integer> weights = new Config().WEIGHTS;
-        int totalWeight = weights.stream().mapToInt(Integer::intValue).sum();
-        float degreesPerWeight = 360f / totalWeight;
+    private void playDynamicSpinSound(Level level, BlockPos pos) {
+        // Higher spinSpeed → smaller delay → faster ticking sound
+        int interval = Math.max(2, (int)(40 / Math.max(1, spinSpeed)));
 
-        float cumulative = 0f;
-        for (int weight : weights) {
-            cumulative += weight * degreesPerWeight;
-
-            float diff = Math.abs((rotationAngle % 360f) - cumulative);
-            if (diff < 2f || Math.abs(diff - 360f) < 2f) {
-                return true;
-            }
+        if (soundTimer <= 0) {
+            soundTimer = interval;
+            level.playSound(
+                    null,
+                    pos,
+                    ModSounds.WHEEL_SPIN.get(),
+                    SoundSource.BLOCKS,
+                    1.0F,
+                    1.0F
+            );
+        } else {
+            soundTimer--;
         }
-
-        return false;
     }
 
     private void consumeCoin() {
