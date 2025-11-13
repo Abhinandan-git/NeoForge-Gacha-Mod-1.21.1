@@ -146,7 +146,7 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
             displayText = -1;
             if (isInputCorrect()) {
                 isSpinning = 1;
-                spinSpeed = 30f + level.random.nextFloat() * 10f;
+                spinSpeed = 30f + level.random.nextFloat() * 40f;
                 consumeCoin();
             }
             rotationAngle = (rotationAngle + 1) % 360;

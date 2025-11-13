@@ -12,7 +12,7 @@ public class ModItems {
 
     public static final DeferredItem<Item> CELESTIA_COIN = ITEMS.register(
             "celestia_coin",
-            () -> new Item(new Item.Properties())
+            () -> new Item(new Item.Properties().fireResistant())
     );
 
     public static void register(@NotNull IEventBus eventBus) {
