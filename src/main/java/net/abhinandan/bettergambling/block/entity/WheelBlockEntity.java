@@ -59,7 +59,7 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
     private int isSpinning = 0;
     private float spinSpeed = 1f;
     private int spinCooldown = 60;
-    private int soundTimer = 0;
+    private boolean shouldPlaySound = true;
     private int displayText = -1;
     private static final String[] REWARD_ORDER = { "COMMON", "UNCOMMON", "RARE", "EPIC", "OMEGA" };
 
@@ -148,7 +148,7 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
                 isSpinning = 1;
                 spinSpeed = 30f + level.random.nextFloat() * 40f;
                 consumeCoin();
-                soundTimer = 0;
+                shouldPlaySound = true;
             }
             rotationAngle = (rotationAngle + 1) % 360;
         } else if (isSpinning == 1) {
@@ -161,7 +161,10 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
                 isSpinning = 2;
             }
 
-            playDynamicSpinSound(level, pos);
+            if (shouldPlaySound) {
+                playDynamicSpinSound(level, pos);
+                shouldPlaySound = false;
+            }
         } else if (isSpinning == 2) {
             if (spinCooldown > 0) {
                 spinCooldown--;
@@ -176,22 +179,14 @@ public class WheelBlockEntity extends BlockEntity implements MenuProvider {
     }
 
     private void playDynamicSpinSound(Level level, BlockPos pos) {
-        // Higher spinSpeed → smaller delay → faster ticking sound
-        int interval = Math.max(2, (int)(40 / Math.max(1, spinSpeed)));
-
-        if (soundTimer <= 0) {
-            soundTimer = interval;
-            level.playSound(
-                    null,
-                    pos,
-                    ModSounds.WHEEL_SPIN.get(),
-                    SoundSource.BLOCKS,
-                    1.0F,
-                    1.0F
-            );
-        } else {
-            soundTimer--;
-        }
+        level.playSound(
+                null,
+                pos,
+                ModSounds.WHEEL_SPIN.get(),
+                SoundSource.BLOCKS,
+                1.0F,
+                1.0F
+        );
     }
 
     private void consumeCoin() {

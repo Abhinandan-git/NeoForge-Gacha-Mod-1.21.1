@@ -1,10 +1,10 @@
 {
   "item.bettergambling.celestia_coin": "Celestia Coin",
 
-  "block.bettergambling.wheel_block": "Block of Wheel",
-  "block.bettergambling.wheel_top_block": "Block of Wheel",
+  "block.bettergambling.wheel_block": "Gamba Wheel",
+  "block.bettergambling.wheel_top_block": "Gamba Wheel",
 
-  "creativetab.bettergambling.gacha_items": "Gacha",
+  "creativetab.bettergambling.gamba_items": "BetterGambling",
 
   "sound.bettergambling.wheel_spin": "Wheel Spinning",
   "sound.bettergambling.item_pop": "Item dropped",

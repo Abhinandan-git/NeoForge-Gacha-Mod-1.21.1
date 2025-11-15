@@ -17,10 +17,10 @@ public class ModCreativeModeTabs {
             Registries.CREATIVE_MODE_TAB, BetterGambling.MOD_ID
     );
 
-    public static final Supplier<CreativeModeTab> GACHA_TAB = CREATIVE_MODE_TAB.register(
-            "gacha_tab",
+    public static final Supplier<CreativeModeTab> GAMBA_TAB = CREATIVE_MODE_TAB.register(
+            "gamba_tab",
             () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.CELESTIA_COIN.get()))
-                    .title(Component.translatable("creativetab.bettergambling.gacha_items"))
+                    .title(Component.translatable("creativetab.bettergambling.gamba_items"))
                     .displayItems(((itemDisplayParameters, output) -> {
                         output.accept(ModItems.CELESTIA_COIN);
                         output.accept(ModBlocks.WHEEL_BLOCK);
