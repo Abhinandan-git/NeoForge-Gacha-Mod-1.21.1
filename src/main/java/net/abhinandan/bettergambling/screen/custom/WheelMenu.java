@@ -30,7 +30,12 @@ public class WheelMenu extends AbstractContainerMenu {
 
         addPlayerHotbar(inventory);
 
-        this.addSlot(new SlotItemHandler(this.wheelBlockEntity.inventory, 0, 152, 120));
+        this.addSlot(new SlotItemHandler(this.wheelBlockEntity.inventory, 0, 152, 120) {
+            @Override
+            public int getMaxStackSize() {
+                return 1;
+            }
+        });
 
         addDataSlots(data);
     }
